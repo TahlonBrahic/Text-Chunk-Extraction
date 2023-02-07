@@ -29,15 +29,26 @@ def save_text_to_file(chunks, filename):
             f.write(chunk + '\n')
 
 if __name__ == '__main__':
-    pdf_file = input("Enter the PDF's directory': ")
-    page_start = int(input("Enter the starting page number: "))
-    page_end = int(input("Enter the ending page number: "))
-    chunk_size = int(input("Enter the desired chunk size (in words): "))
-    filename = input("Enter the text file name: ")
 
-    try:
-        text = extract_pdf_text(pdf_file, page_start, page_end)
-        chunks = split_text(text, chunk_size)
-        save_text_to_file(chunks, filename) 
-    except:
-        print("File could not be found.")
+    extraction_method = input("Enter extraction method: 'scanned' or 'encoded'")
+
+    if extraction_method == 'encoded'
+        pdf_file = input("Enter the PDF's directory': ")
+        page_start = int(input("Enter the starting page number: "))
+        page_end = int(input("Enter the ending page number: "))
+        chunk_size = int(input("Enter the desired chunk size (in words): "))
+        filename = input("Enter the text file name: ")
+
+        try:
+            text = extract_pdf_text(pdf_file, page_start, page_end)
+            chunks = split_text(text, chunk_size)
+            save_text_to_file(chunks, filename) 
+        except:
+            print("File could not be found.")
+    
+    elif extraction_method == 'scanned':
+        pdf_file = input("Enter the PDF's directory': ")
+        page_start = int(input("Enter the starting page number: "))
+        page_end = int(input("Enter the ending page number: "))
+        chunk_size = int(input("Enter the desired chunk size (in words): "))
+        filename = input("Enter the text file name: ")
