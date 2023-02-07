@@ -35,6 +35,9 @@ if __name__ == '__main__':
     chunk_size = int(input("Enter the desired chunk size (in words): "))
     filename = input("Enter the text file name: ")
 
-    text = extract_pdf_text(pdf_file, page_start, page_end)
-    chunks = split_text(text, chunk_size)
-    save_text_to_file(chunks, filename) 
+    try:
+        text = extract_pdf_text(pdf_file, page_start, page_end)
+        chunks = split_text(text, chunk_size)
+        save_text_to_file(chunks, filename) 
+    except:
+        print("File could not be found.")
