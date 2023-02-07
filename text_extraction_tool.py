@@ -2,6 +2,7 @@ import PyPDF2
 import pytesseract
 import cv2
 import os
+from pdf2image import convert_from_path
 
 # encoded text extraction
 def extract_encoded_pdf_text(pdf_file, page_start, page_end):
@@ -12,15 +13,13 @@ def extract_encoded_pdf_text(pdf_file, page_start, page_end):
     return text
 
 # scanned text extraction
-def extract_pdf_to_images(pdf_file, page_start, page_end, image_dir='X:\Files\Programming\Projects\\text_extraction_tool\images'):
-    pdf = PyPDF2.PdfFileReader(pdf_file)
-    for page_num in range(page_start, page_end):
-        page = pdf.getPage(page_num)
-        image_path = f"{image_dir}/page{page_num}.jpg"
-        image = page.to_image(resolution=300)
-        image.save(image_path, 'JPEG')
+def extract_pdf_to_images(pdf_file, page_start, page_end, image_dir='C:/Users/Tahlon/Desktop'):
+    pages = convert_from_path(pdf_file, dpi=300)
+    for i, page in enumerate(pages[page_start:page_end]):
+        image_path = f"{image_dir}/page{i + page_start}.jpg"
+        page.save(image_path, 'JPEG')
 
-def extract_text_from_image(image_dir='./images'):
+def extract_text_from_image(image_dir='C:/Users/Tahlon/Desktop'):
     text = ''
     for image_file in os.listdir(image_dir):
         if image_file.endswith('.jpg'):
@@ -29,7 +28,6 @@ def extract_text_from_image(image_dir='./images'):
             text += pytesseract.image_to_string(image) + '\n'
     
     return text
-
 
 # chunk processing and file saving
 def split_text(text, chunk_size):
@@ -82,4 +80,4 @@ def user_input(extraction_method):
 # program
 if __name__ == '__main__':
     user_input(extraction_method())
-    print('Your file has been sent to your desktop.')
+    print('Your file has been sent to your local directory.')
