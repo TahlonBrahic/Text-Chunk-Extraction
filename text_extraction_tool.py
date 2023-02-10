@@ -13,20 +13,20 @@ def extract_encoded_pdf_text(pdf_file, page_start, page_end):
     return text
 
 # scanned text extraction
-def extract_pdf_to_images(pdf_file, page_start, page_end, image_dir='C:/Users/Tahlon/Desktop'):
+def extract_pdf_to_images(pdf_file, page_start, page_end, image_dir='X:\Files\Programming\Projects\\text_extraction_tool\images'):
     pages = convert_from_path(pdf_file, dpi=300)
     for i, page in enumerate(pages[page_start:page_end]):
         image_path = f"{image_dir}/page{i + page_start}.jpg"
         page.save(image_path, 'JPEG')
 
-def extract_text_from_image(image_dir='C:/Users/Tahlon/Desktop'):
+def extract_text_from_image(image_dir='X:\Files\Programming\Projects\\text_extraction_tool\images'):
     text = ''
     for image_file in os.listdir(image_dir):
         if image_file.endswith('.jpg'):
             image_path = os.path.join(image_dir, image_file)
             image = cv2.imread(image_path)    
             text += pytesseract.image_to_string(image) + '\n'
-    
+    print(text)
     return text
 
 # chunk processing and file saving
@@ -34,6 +34,7 @@ def split_text(text, chunk_size):
     chunks = []
     current_chunk = ''
     words = text.split()
+    print(words)
     for word in words:
         if len(current_chunk) + len(word) <= chunk_size:
             current_chunk += word + ' '
@@ -50,7 +51,12 @@ def save_text_to_file(chunks, filename):
 
 # processing 
 def extraction_method():
-    return input("Enter extraction method: 'scanned' or 'encoded' ")
+    valid_options = ['scanned','encoded']
+    user_input = input("Enter extraction method: 'scanned' or 'encoded' ")
+    while user_input not in valid_options:
+        print("Enter either encoded or scanned.")
+        user_input = input("Enter extraction method: 'scanned' or 'encoded' ")
+    return user_input
 
 # user input
 def user_input(extraction_method):
