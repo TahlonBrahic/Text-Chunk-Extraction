@@ -9,7 +9,9 @@ def extract_encoded_pdf_text(pdf_file, page_start, page_end):
     pdf = PyPDF2.PdfFileReader(pdf_file)
     text = ''
     for page_num in range(page_start, page_end):
-        text += pdf.getPage(page_num).extract_text()
+        text += pdf \
+            .getPage(page_num) \
+            .extract_text()
     return text
 
 # scanned text extraction
