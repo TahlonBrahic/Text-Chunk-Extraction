@@ -18,6 +18,7 @@ def extract_encoded_pdf_text(pdf_file, page_start, page_end):
 def extract_pdf_to_images(pdf_file, page_start, page_end, image_dir='X:\Files\Programming\Projects\\text_extraction_tool\images'):
     pages = convert_from_path(pdf_file, dpi=300)
     for i, page in enumerate(pages[page_start:page_end]):
+        print(page)
         image_path = f"{image_dir}/page{i + page_start}.jpg"
         page.save(image_path, 'JPEG')
 
@@ -72,6 +73,7 @@ def user_input(extraction_method):
     if extraction_method == 'encoded':
         try:
             text = extract_encoded_pdf_text(pdf_file, page_start, page_end)
+            print('Your file has been sent to your local directory.')
         except:
             print("File could not be found.")
     elif extraction_method == 'scanned':
@@ -79,6 +81,7 @@ def user_input(extraction_method):
             extract_pdf_to_images(pdf_file, page_start, page_end)
             for page_num in range(page_start, page_end):
                 text += extract_text_from_image(page_num=page_num)
+            print('Your file has been sent to your local directory.')
         except: 
             print("File could not be found.")
     chunks = split_text(text, chunk_size)
@@ -88,4 +91,3 @@ def user_input(extraction_method):
 # program
 if __name__ == '__main__':
     user_input(extraction_method())
-    print('Your file has been sent to your local directory.')
