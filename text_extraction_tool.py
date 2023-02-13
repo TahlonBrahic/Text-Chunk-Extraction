@@ -12,16 +12,27 @@ def extract_encoded_pdf_text(pdf_file, page_start, page_end):
         text += pdf \
             .getPage(page_num) \
             .extract_text()
+    print(text)
     return text
 
 # scanned text extraction
 def extract_pdf_to_images(pdf_file, page_start, page_end, image_dir=r"X:/Files/Programming/Projects/text_extraction_tool/images"):
-    pages = convert_from_path(pdf_file, dpi=300)
-    for i, page in enumerate(pages[page_start:page_end]):
-        print(f"Processing page {i+page_start}")
-        image_path = f"{image_dir}/page{i + page_start}.jpg"
-        page.save(image_path, 'JPEG') 
+    with open(pdf_file, 'rb') as file:
+        input_pdf = PyPDF2.PdfFileReader(pdf_file)
+        output_pdf = PyPDF2.PdfFileWriter()
 
+        for page_num in range(page_end-page_start):
+            page = input_pdf.getPage(page_num)
+            output_pdf.addPage(page)
+
+        with open('output.pdf', 'wb') as output_file:
+            output_pdf.write(output_file)
+
+    with open('output.pdf', 'rb') as file:
+        pages = convert_from_path('output.pdf')   
+        for i, page in enumerate(pages):
+            page.save(f"{image_dir}/page_{i+1}.jpg", 'JPEG')
+       
 def extract_text_from_image(image_dir=r'X:/Files/Programming/Projects/text_extraction_tool/images'):
     text = ''
     for image_file in os.listdir(image_dir):
@@ -55,7 +66,7 @@ def save_text_to_file(chunks, filename):
 # processing 
 def extraction_method():
     valid_options = ['scanned','encoded']
-    user_input = 'scanned' #input("Enter extraction method: 'scanned' or 'encoded' ")
+    user_input = 'encoded' #input("Enter extraction method: 'scanned' or 'encoded' ")
     return user_input
     while user_input not in valid_options:
         print("Enter either encoded or scanned.")
@@ -91,22 +102,7 @@ def user_input(extraction_method):
 # program
 if __name__ == '__main__':
     #user_input(extraction_method())
-    with open('X:/Files/Programming/Projects/text_extraction_tool/examples/test.pdf', 'rb') as file:
-        input_pdf = PyPDF2.PdfFileReader('X:/Files/Programming/Projects/text_extraction_tool/examples/test.pdf')
-        output_pdf = PyPDF2.PdfFileWriter()
+    extract_pdf_to_images('X:/Files/Programming/Projects/text_extraction_tool/examples/test.pdf', 50,53)
 
-        for page_num in range(input_pdf.getNumPages()):
-            if page_num == 50: # taking forever
-                page = input_pdf.getPage(page_num)
-                output_pdf.addPage(page)
 
-        with open('output.pdf', 'wb') as output_file:
-            output_pdf.write(output_file)
-
-    with open('output.pdf', 'rb') as file:
-        pages = convert_from_path('output.pdf')
-    
-    print(output_pdf.getNumPages())
-    output_pdf.save(r'X:/Files/Programming/Projects/text_extraction_tool/images', 'PDF')
-       
         
