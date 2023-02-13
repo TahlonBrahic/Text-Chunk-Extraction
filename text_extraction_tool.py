@@ -18,9 +18,9 @@ def extract_encoded_pdf_text(pdf_file, page_start, page_end):
 def extract_pdf_to_images(pdf_file, page_start, page_end, image_dir=r"X:/Files/Programming/Projects/text_extraction_tool/images"):
     pages = convert_from_path(pdf_file, dpi=300)
     for i, page in enumerate(pages[page_start:page_end]):
-        print(page)
+        print(f"Processing page {i+page_start}")
         image_path = f"{image_dir}/page{i + page_start}.jpg"
-        page.save(image_path, 'JPEG')
+        page.save(image_path, 'JPEG') 
 
 def extract_text_from_image(image_dir=r'X:/Files/Programming/Projects/text_extraction_tool/images'):
     text = ''
@@ -64,7 +64,7 @@ def extraction_method():
 
 # user input
 def user_input(extraction_method):
-    pdf_file = 'examples/test.pdf' #input("Enter the PDF's directory': ")
+    pdf_file = 'X:/Files/Programming/Projects/text_extraction_tool/examples/test.pdf' #input("Enter the PDF's directory': ")
     page_start = 30 #int(input("Enter the starting page number: "))
     page_end = 60 #int(input("Enter the ending page number: "))
     chunk_size = 400 #int(input("Enter the desired chunk size (in words): "))
@@ -82,7 +82,7 @@ def user_input(extraction_method):
             for page_num in range(page_start, page_end):
                 text += extract_text_from_image(page_num=page_num)
         except: 
-            print("File could not be found.")
+            print("Scanned file could not be found.")
     chunks = split_text(text, chunk_size)
     save_text_to_file(chunks, filename) 
     print('Your file has been sent to your local directory.')
@@ -90,4 +90,23 @@ def user_input(extraction_method):
 
 # program
 if __name__ == '__main__':
-    user_input(extraction_method())
+    #user_input(extraction_method())
+    with open('X:/Files/Programming/Projects/text_extraction_tool/examples/test.pdf', 'rb') as file:
+        input_pdf = PyPDF2.PdfFileReader('X:/Files/Programming/Projects/text_extraction_tool/examples/test.pdf')
+        output_pdf = PyPDF2.PdfFileWriter()
+
+        for page_num in range(input_pdf.getNumPages()):
+            if page_num == 50: # taking forever
+                page = input_pdf.getPage(page_num)
+                output_pdf.addPage(page)
+
+        with open('output.pdf', 'wb') as output_file:
+            output_pdf.write(output_file)
+
+    with open('output.pdf', 'rb') as file:
+        pages = convert_from_path('output.pdf')
+    
+    print(output_pdf.getNumPages())
+    output_pdf.save(r'X:/Files/Programming/Projects/text_extraction_tool/images', 'PDF')
+       
+        
