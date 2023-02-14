@@ -2,9 +2,8 @@ import PyPDF2
 import pytesseract
 import cv2
 import os
-from pdf2image import convert_from_path
-
-
+from wand.image import Image
+          
 # encoded text extraction
 def extract_encoded_pdf_text(pdf_file, page_start, page_end):
     pdf = PyPDF2.PdfReader(pdf_file)
@@ -13,26 +12,17 @@ def extract_encoded_pdf_text(pdf_file, page_start, page_end):
         text += pdf \
             .getPage(page_num) \
             .extract_text()
-    print(text)
     return text
 
 # scanned text extraction
-def extract_pdf_to_images(pdf_file, page_start, page_end, image_dir=r"images"):
-    with open(pdf_file, 'rb') as file:
-        input_pdf = PyPDF2.PdfReader(pdf_file)
-        output_pdf = PyPDF2.PdfWriter()
-
-        for page_num in range(page_end-page_start):
-            page = input_pdf.pages[page_num]
-            output_pdf.add_page(page)
-
-        with open('output.pdf', 'wb') as output_file:
-            output_pdf.write(output_file)
-
-    with open('output.pdf', 'rb') as file:
-        pages = convert_from_path('output.pdf')   
-        for i, page in enumerate(pages):
-            page.save(f"{image_dir}/page_{i+1}.jpg", 'JPEG')
+def extract_pdf_to_images(pdf, start, end):
+    with Image(filename=pdf, resolution=200) as img:
+        img.compression_quality = 99
+        img.background_color = Color("white")
+        for i in range(start, end):
+            with img[i] as page:
+                page.format = 'jpeg'
+                page.save(filename=f"images/page_{i+1}.jpg")
        
 def extract_text_from_image(image_dir=r'images'):
     text = ''
@@ -41,7 +31,6 @@ def extract_text_from_image(image_dir=r'images'):
             image_path = os.path.join(image_dir, image_file)
             image = cv2.imread(image_path)    
             text += pytesseract.image_to_string(image) + '\n'
-    print(text)
     return text
 
 # chunk processing and file saving
