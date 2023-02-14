@@ -17,7 +17,7 @@ def extract_encoded_pdf_text(pdf_file, page_start, page_end):
     return text
 
 # scanned text extraction
-def extract_pdf_to_images(pdf_file, page_start, page_end, image_dir=r"X:/Files/Programming/Projects/text_extraction_tool/images"):
+def extract_pdf_to_images(pdf_file, page_start, page_end, image_dir=r"images"):
     with open(pdf_file, 'rb') as file:
         input_pdf = PyPDF2.PdfReader(pdf_file)
         output_pdf = PyPDF2.PdfWriter()
@@ -34,7 +34,7 @@ def extract_pdf_to_images(pdf_file, page_start, page_end, image_dir=r"X:/Files/P
         for i, page in enumerate(pages):
             page.save(f"{image_dir}/page_{i+1}.jpg", 'JPEG')
        
-def extract_text_from_image(image_dir=r'X:/Files/Programming/Projects/text_extraction_tool/images'):
+def extract_text_from_image(image_dir=r'images'):
     text = ''
     for image_file in os.listdir(image_dir):
         if image_file.endswith('.jpg'):
@@ -76,7 +76,7 @@ def extraction_method():
 
 # user input
 def user_input(extraction_method):
-    pdf_file = 'X:/Files/Programming/Projects/text_extraction_tool/examples/test.pdf' #input("Enter the PDF's directory': ")
+    pdf_file = 'examples/test.pdf' #input("Enter the PDF's directory': ")
     page_start = 30 #int(input("Enter the starting page number: "))
     page_end = 60 #int(input("Enter the ending page number: "))
     chunk_size = 400 #int(input("Enter the desired chunk size (in words): "))
