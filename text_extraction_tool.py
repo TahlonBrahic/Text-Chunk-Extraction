@@ -4,9 +4,10 @@ import cv2
 import os
 from pdf2image import convert_from_path
 
+
 # encoded text extraction
 def extract_encoded_pdf_text(pdf_file, page_start, page_end):
-    pdf = PyPDF2.PdfFileReader(pdf_file)
+    pdf = PyPDF2.PdfReader(pdf_file)
     text = ''
     for page_num in range(page_start, page_end):
         text += pdf \
@@ -18,12 +19,12 @@ def extract_encoded_pdf_text(pdf_file, page_start, page_end):
 # scanned text extraction
 def extract_pdf_to_images(pdf_file, page_start, page_end, image_dir=r"X:/Files/Programming/Projects/text_extraction_tool/images"):
     with open(pdf_file, 'rb') as file:
-        input_pdf = PyPDF2.PdfFileReader(pdf_file)
-        output_pdf = PyPDF2.PdfFileWriter()
+        input_pdf = PyPDF2.PdfReader(pdf_file)
+        output_pdf = PyPDF2.PdfWriter()
 
         for page_num in range(page_end-page_start):
-            page = input_pdf.getPage(page_num)
-            output_pdf.addPage(page)
+            page = input_pdf.pages[page_num]
+            output_pdf.add_page(page)
 
         with open('output.pdf', 'wb') as output_file:
             output_pdf.write(output_file)
